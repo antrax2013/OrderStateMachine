@@ -1,0 +1,31 @@
+meta {
+  name: SendEvent
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:5000/receive/{{orderId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "evt": "OrderPaid"
+  }
+}
+
+vars:pre-request {
+  orderId: 1
+  : OrderPaid
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

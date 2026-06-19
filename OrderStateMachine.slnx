@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OrderStateMachine.Api/OrderStateMachine.Api.csproj" Id="ebb348e1-a102-4799-a6e9-50219790f86c" />
+    <Project Path="src/OrderStateMachine/OrderStateMachine.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OrderStateMachine.Tests/OrderStateMachine.Tests.csproj" />
+  </Folder>
+</Solution>
