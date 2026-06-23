@@ -3,7 +3,7 @@
 public class OrderStateMachine : IStateMachine
 {
     private readonly StateMachine stateMachine = new([
-        new Transition (OrderEvent.OrderPaid, OrderState.Created, OrderState.Paid),
+        new Transition (OrderEvent.OrderPaid, OrderState.Created, OrderState.Paid, new Notify("=> paid event")),
         new Transition(OrderEvent.OrderShipped, OrderState.Paid, OrderState.Shipped),
         new Transition(OrderEvent.OrderDelivered, OrderState.Shipped, OrderState.Delivered),
 

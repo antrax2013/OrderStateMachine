@@ -4,7 +4,7 @@ public class StateMachineTests
 {
     readonly Order orderModel = new();
 
-    private Order GetOrder(OrderState state) => orderModel with { Id = Guid.NewGuid(), State = state };
+    private Order GetOrder(OrderState state) => orderModel with { Id = 0, State = state };
 
     [Fact]
     public void Given_CreatedOrder_When_PaidEventReceived_Then_OrderBecomesPaid()
@@ -44,7 +44,7 @@ public class StateMachineTests
         var transition = new Transition(OrderEvent.OrderPaid, OrderState.Created, OrderState.Paid);
         var stateMachine = new StateMachine([transition]);
 
-        // When
+        // When / Then
         Assert.Throws<InvalidOperationException>(
             () => stateMachine.Apply(OrderEvent.OrderShipped, order)
         );
@@ -68,5 +68,32 @@ public class StateMachineTests
 
         // Then
         Assert.Equal(OrderState.Delivered, order.State);
+    }
+
+    private class FakeHandler : IActionHandler
+    {
+        public bool IsCalled = false;
+
+        public void Handle()
+        {
+            IsCalled = true;
+        }
+    }
+
+    [Fact]
+    public async Task Given_CreatedOrder_When_PaidEventReceived_Then_OrderBecomesPaid_And_PaidActionTriggered()
+    {
+        // Given
+        var fakePaidAction = new FakeHandler();
+        var order = GetOrder(OrderState.Created);
+        var transition = new Transition(OrderEvent.OrderPaid, OrderState.Created, OrderState.Paid, fakePaidAction);
+        var stateMachine = new StateMachine([transition]);
+
+        // When
+        stateMachine.Apply(OrderEvent.OrderPaid, order);
+
+        // Then
+        Assert.Equal(OrderState.Paid, order.State);
+        Assert.True(fakePaidAction.IsCalled);
     }
 }
